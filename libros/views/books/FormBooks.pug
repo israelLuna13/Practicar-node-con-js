@@ -1,0 +1,45 @@
+extends ../layout/index
+block contenido
+     div.py-10 
+        h1.text-4xl.my-10.font-extrabold.text-center.text-black Create 
+            span.font-normal Category
+            div(class="flex justify-center py-2")
+        h2.text-center.text-2xl.font-extrabold.text-black= page
+
+        if notify
+            if notify.success
+                div(class="max-w-md mx-auto my-10")
+                    p(class="alert-success") Book has been created
+            else
+                div(class="max-w-md mx-auto my-10")
+                    each error in notify.errors
+                        p(class="alert-error")= error.msg
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                form.space-y-5(method="POST" action="")
+                    div 
+                        label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="name") Name 
+                        input#name.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Name" type="text"   name="name")
+
+                    div 
+                        label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="price") price 
+                        input#price.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="price" type="number"   name="price")
+
+                    div(class="md:flex md:gap-4 space-y-5 md:space-y-0")
+                        div(class="md:w-1/2") 
+                            label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="autorId") Autor 
+                            select#autorId.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(name="autorId") 
+                                option(value="") -- Choose --
+                                each autor in autores.rows
+                                    option(value=autor.id)=autor.name  
+                        div(class="md:w-1/2") 
+                            label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="categoryId") Category 
+                            select#categoryId.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(name="categoryId") 
+                                option(value="") -- Choose --
+                                each category in categorys.rows
+                                    option(value=category.id)=category.name  
+                    
+                    input(class ="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Create") 
+block scripts
+    script(src='/js/notify.js')

@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "libros",
+  "version": "1.0.0",
+  "description": "crear libros",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css": "postcss public/css/tailwind.css -o public/css/app.css --watch",
+    "server": "nodemon index.js",
+    "js":"webpack --watch",
+    "start": ""
+  },
+  "author": "israel luna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "pg": "^8.16.0",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.5",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^3.4.17",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^5.1.4"
+  }
+}

@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
+public/js/*.js
+public/css/*.css
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Webpack cache (optional)
+.cache/
+webpack.cache/
+
+# Environment vari

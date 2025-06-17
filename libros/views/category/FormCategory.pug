@@ -1,0 +1,27 @@
+extends ../layout/index
+block contenido
+    div.py-10 
+        h1.text-4xl.my-10.font-extrabold.text-center.text-black Create 
+            span.font-normal Category
+            div(class="flex justify-center py-2")
+        h2.text-center.text-2xl.font-extrabold.text-black= page
+
+        if notify
+            if notify.success
+                div(class="max-w-md mx-auto my-10")
+                    p(class="alert-success") Category has been created
+            else
+                div(class="max-w-md mx-auto my-10")
+                    each error in notify.errors
+                        p(class="alert-error")= error.msg
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                form.space-y-5(method="POST" action="")
+                    div 
+                    label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="name") Name 
+                    input#name.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Name" type="text"   name="name")
+
+                    input(class ="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Create") 
+block scripts
+    script(src='/js/notify.js')
