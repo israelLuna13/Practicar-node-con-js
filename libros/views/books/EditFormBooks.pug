@@ -9,7 +9,7 @@ block contenido
         if notify
             if notify.success
                 div(class="max-w-md mx-auto my-10")
-                    p(class="alert-success") Book has been created
+                    p(class="alert-success")= message
             else
                 div(class="max-w-md mx-auto my-10")
                     each error in notify.errors
@@ -18,6 +18,7 @@ block contenido
         div(class="mt-8 mx-auto max-w-md")
             div(class="bg-white py-8 px-4 shadow rounded-2xl")
                 form.space-y-5(method="POST" action="")
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div 
                         label.block.text-sm.uppercase.text-gray-800.mb-2.font-bold(for="name") Name 
                         input#name.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Name" type="text"   name="name" value=book.name ? book.name : '' )
@@ -40,6 +41,6 @@ block contenido
                                 each category in categorys.rows
                                     option(value=category.id selected=book.categoryid ? book.categoryid == category.id ? true : false : null)=category.name  
                     
-                    input(class ="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Create") 
+                    input(class ="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Save changes") 
 block scripts
     script(src='/js/notify.js')

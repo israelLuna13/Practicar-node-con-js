@@ -8,12 +8,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "css": "postcss public/css/tailwind.css -o public/css/app.css --watch",
     "server": "nodemon index.js",
-    "js":"webpack --watch",
+    "js": "webpack --watch",
     "start": ""
   },
   "author": "israel luna",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.11.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",

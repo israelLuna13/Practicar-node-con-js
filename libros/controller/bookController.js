@@ -1,9 +1,9 @@
 import { check,validationResult } from "express-validator";
 import { newPool } from "../config/db.js";
+import { getAutor, getCategorys } from "../helper/dbQuery.js";
 
 export class BookController {
-
-  static home = async(req, res) => {
+  static home = async (req, res) => {
     const books = await newPool.query(`
      SELECT 
             books.id,
@@ -15,16 +15,17 @@ export class BookController {
             INNER JOIN autors ON books.autorId = autors.id 
             INNER JOIN categorys ON books.categoryId = categorys.id;
 
-      `);      
+      `);
     res.render("home", {
       page: "Home",
-      books
+      books,
     });
   };
 
   static formCategory = (req, res) => {
     res.render("category/FormCategory", {
       page: "Category",
+      csrfToken:req.csrfToken(),
     });
   };
   static createCategory = async (req, res) => {
@@ -36,6 +37,7 @@ export class BookController {
         return res.render("category/FormCategory", {
           page: "Category",
           notify: { errors: result.array(), success: false },
+          csrfToken:req.csrfToken(),
         });
       }
       const { name } = req.body;
@@ -47,6 +49,7 @@ export class BookController {
       );
       res.render("category/FormCategory", {
         notify: { errors: false, success: true },
+        csrfToken:req.csrfToken(),
       });
     } catch (error) {
       console.log(error);
@@ -54,13 +57,14 @@ export class BookController {
     }
   };
 
-  static formAutor = async(req, res) => {
+  static formAutor = async (req, res) => {
     // const autor = await newPool.query(`
     //   SELECT * FROM autors;
     //   `)
     res.render("autor/FormAutor", {
-      page: "Autor"
-        });
+      page: "Autor",
+      csrfToken:req.csrfToken(),
+    });
   };
 
   static createAutor = async (req, res) => {
@@ -75,6 +79,7 @@ export class BookController {
       return res.render("autor/FormAutor", {
         page: "Autor",
         notify: { errors: result.array(), success: false },
+        csrfToken:req.csrfToken(),
       });
     }
     const { name, country } = req.body;
@@ -87,108 +92,146 @@ export class BookController {
     );
     res.render("autor/FormAutor", {
       notify: { errors: false, success: true },
+      csrfToken:req.csrfToken(),
     });
   };
 
-   static formBook = async(req, res) => {
-     const autores= await newPool.query(`
+  static formBook = async (req, res) => {
+    const autores = await newPool.query(`
         SELECT * FROM autors;
-        `)
-        const categorys= await newPool.query(`
+        `);
+    const categorys = await newPool.query(`
         SELECT * FROM categorys;
-        `)
-    res.render('books/FormBooks',{
-        page:'books',
-        autores,
-        categorys
-    })
+        `);
+    res.render("books/FormBooks", {
+      page: "books",
+      autores,
+      categorys,
+      csrfToken:req.csrfToken(),
+    });
   };
 
   static createBook = async (req, res) => {
     await check("name").notEmpty().withMessage("Name is required").run(req);
-    await check("price")
+    await check("price").isNumeric().withMessage("Price is required").run(req);
+    await check("autorId")
       .isNumeric()
-      .withMessage("Price is required")
-      .run(req);
-    await check('autorId')
-        .isNumeric()
       .withMessage("Autor is required")
       .run(req);
-    await check('categoryId')
-        .isNumeric()
+    await check("categoryId")
+      .isNumeric()
       .withMessage("Category is required")
       .run(req);
     let result = validationResult(req);
- const autores= await newPool.query(`
-        SELECT * FROM autors;
-        `)
-        const categorys= await newPool.query(`
-        SELECT * FROM categorys;
-        `)
+    const autores = await getAutor();
+    const categorys = await getCategorys();
 
     if (!result.isEmpty()) {
-
       return res.render("books/FormBooks", {
         page: "Autor",
         notify: { errors: result.array(), success: false },
         categorys,
-        autores
+        autores,
+        csrfToken:req.csrfToken(),
       });
-    }    
-     const { name, price,autorId,categoryId } = req.body;
+    }
+    const { name, price, autorId, categoryId } = req.body;
 
-     console.log(req.body);
-     
+    console.log(req.body);
 
     await newPool.query(
       `
             INSERT INTO books (name,price,autorId,categoryId) VALUES ($1,$2,$3,$4)
             `,
-      [name, price,autorId,categoryId]
+      [name, price, autorId, categoryId]
     );
     res.render("books/FormBooks", {
       notify: { errors: false, success: true },
-       categorys,
-        autores
+      categorys,
+      autores,
+      csrfToken:req.csrfToken(),
     });
   };
 
-    static formEditAutor = async(req, res) => {
-      const {autorId}=req.params
-      
-   const autor = await newPool.query(
-  `SELECT * FROM autors WHERE id = $1`,
-  [autorId]
-);      
+  static formEditAutor = async (req, res) => {
+    const { autorId } = req.params;
+
+    const autor = await newPool.query(`SELECT * FROM autors WHERE id = $1`, [
+      autorId,
+    ]);
     res.render("autor/EditFormAutor", {
       page: "Autor",
-      autor:autor.rows[0]
-        });
+      autor: autor.rows[0],
+      csrfToken:req.csrfToken(),
+    });
   };
 
-    static formEditBook = async(req, res) => {
-      const {bookId}=req.params
+  static formEditBook = async (req, res) => {
+    const { bookId } = req.params;
 
-       const autores= await newPool.query(`
-        SELECT * FROM autors;
-        `)
-        const categorys= await newPool.query(`
-        SELECT * FROM categorys;
-        `)
-       const book = await newPool.query(`
+    const autores = await getAutor();
+    const categorys = await getCategorys();
+    const book = await newPool.query(
+      `
      SELECT * FROM books WHERE id = $1;
-      `,[bookId]);          
-      console.log(book);
-      
+      `,
+      [bookId]
+    );
+
     res.render("books/EditFormBooks", {
       page: "Autor",
-      book:book.rows[0],
+      book: book.rows[0],
       autores,
-      categorys
-        });
+      categorys,
+      message: "",
+      csrfToken:req.csrfToken(),
+    });
   };
 
+  static editBook = async (req, res) => {
+    const { bookId } = req.params;
 
-  
+    await check("name").notEmpty().withMessage("Name is required").run(req);
+    await check("price").isNumeric().withMessage("Price is required").run(req);
+    await check("autorId")
+      .isNumeric()
+      .withMessage("Autor is required")
+      .run(req);
+    await check("categoryId")
+      .isNumeric()
+      .withMessage("Category is required")
+      .run(req);
+    let result = validationResult(req);
+    const autores = await getAutor();
+    const categorys = await getCategorys();
 
+    const book = await newPool.query(
+      `
+     SELECT * FROM books WHERE id = $1;
+      `,
+      [bookId]
+    );
+
+    if (!result.isEmpty()) {
+      return res.render("books/EditFormBooks", {
+        page: "Autor",
+        notify: { errors: result.array(), success: false },
+        categorys,
+        autores,
+        book: book.rows[0],
+        csrfToken:req.csrfToken(),
+      });
+    }
+    const { name, price, autorId, categoryId } = req.body;
+
+    await newPool.query(
+      `
+      UPDATE books
+        SET name=$1 , price = $2, autorid = $3 ,categoryid = $4
+        WHERE id = $5
+      `,
+      [name, price, autorId, categoryId, bookId]
+    );
+    res.redirect("/books");
+  };
 }

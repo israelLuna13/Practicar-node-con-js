@@ -12,5 +12,6 @@ route.post('/book',BookController.createBook)
 
 route.get('/autor/:autorId',BookController.formEditAutor)
 route.get('/book/:bookId',BookController.formEditBook)
+route.post('/book/:bookId',BookController.editBook)
 
 export default route

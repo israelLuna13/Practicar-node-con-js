@@ -2,6 +2,10 @@ import express from 'express'
 import { newPool } from './config/db.js'
 import dotenv from 'dotenv'
 import book from './routes/route.js'
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
+
+
 
 dotenv.config()
 const app = express()
@@ -10,8 +14,11 @@ const app = express()
 //config middleware to process the data of the request http
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+//enable cookieparser
+app.use(cookieParser())
+//enable csrf
+app.use(csrf({ cookie: true }));
 
-// app.use(csurf({cookie:true}))
 //to enabled pug
 app.set('view engine','pug')
 app.set('views','./views')
