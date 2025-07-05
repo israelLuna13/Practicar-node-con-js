@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "name": "musicapp",
+  "version": "1.0.0",
+  "description": "CRUD music",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate":"node config/migrate.js"
+  },
+  "author": "Israel Castaneda luna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.10",
+    "pg": "^8.16.3"
+  }
+}
