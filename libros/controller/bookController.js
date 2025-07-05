@@ -1,6 +1,6 @@
 import { check,validationResult } from "express-validator";
 import { newPool } from "../config/db.js";
-import { getAutor, getCategorys } from "../helper/dbQuery.js";
+import { deleteBook, getAutor, getCategorys } from "../helper/dbQuery.js";
 
 export class BookController {
   static home = async (req, res) => {
@@ -19,6 +19,7 @@ export class BookController {
     res.render("home", {
       page: "Home",
       books,
+      csrfToken:req.csrfToken()
     });
   };
 
@@ -47,10 +48,7 @@ export class BookController {
             `,
         [name]
       );
-      res.render("category/FormCategory", {
-        notify: { errors: false, success: true },
-        csrfToken:req.csrfToken(),
-      });
+          res.redirect('/books')
     } catch (error) {
       console.log(error);
       console.log("There was a error");
@@ -58,9 +56,7 @@ export class BookController {
   };
 
   static formAutor = async (req, res) => {
-    // const autor = await newPool.query(`
-    //   SELECT * FROM autors;
-    //   `)
+   
     res.render("autor/FormAutor", {
       page: "Autor",
       csrfToken:req.csrfToken(),
@@ -90,10 +86,7 @@ export class BookController {
             `,
       [name, country]
     );
-    res.render("autor/FormAutor", {
-      notify: { errors: false, success: true },
-      csrfToken:req.csrfToken(),
-    });
+    res.redirect('/books')
   };
 
   static formBook = async (req, res) => {
@@ -112,19 +105,20 @@ export class BookController {
   };
 
   static createBook = async (req, res) => {
-    await check("name").notEmpty().withMessage("Name is required").run(req);
-    await check("price").isNumeric().withMessage("Price is required").run(req);
-    await check("autorId")
-      .isNumeric()
-      .withMessage("Autor is required")
-      .run(req);
-    await check("categoryId")
-      .isNumeric()
-      .withMessage("Category is required")
-      .run(req);
-    let result = validationResult(req);
-    const autores = await getAutor();
-    const categorys = await getCategorys();
+   try {
+     await check("name").notEmpty().withMessage("Name is required").run(req);
+     await check("price").isNumeric().withMessage("Price is required").run(req);
+     await check("autorId")
+       .isNumeric()
+       .withMessage("Autor is required")
+       .run(req);
+     await check("categoryId")
+       .isNumeric()
+       .withMessage("Category is required")
+       .run(req);
+     let result = validationResult(req);
+     const autores = await getAutor();
+     const categorys = await getCategorys();
 
     if (!result.isEmpty()) {
       return res.render("books/FormBooks", {
@@ -137,20 +131,18 @@ export class BookController {
     }
     const { name, price, autorId, categoryId } = req.body;
 
-    console.log(req.body);
-
     await newPool.query(
       `
             INSERT INTO books (name,price,autorId,categoryId) VALUES ($1,$2,$3,$4)
             `,
       [name, price, autorId, categoryId]
     );
-    res.render("books/FormBooks", {
-      notify: { errors: false, success: true },
-      categorys,
-      autores,
-      csrfToken:req.csrfToken(),
-    });
+    res.redirect('/books')
+    
+   } catch (error) {
+    console.log(error);
+    
+   }
   };
 
   static formEditAutor = async (req, res) => {
@@ -234,4 +226,17 @@ export class BookController {
     );
     res.redirect("/books");
   };
+
+  static deleteBook = async(req,res)=>{
+    const {bookId} = req.params
+
+   try {
+    await deleteBook(bookId)
+    res.redirect('/books')
+   } catch (error) {
+    console.log(error);
+    
+   }
+    
+  }
 }

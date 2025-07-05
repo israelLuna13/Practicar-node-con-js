@@ -8,3 +8,10 @@ export async function getCategorys(){
    const categorys = await  newPool.query(`SELECT * FROM categorys;`)
    return categorys
 }
+export async function deleteBook(idBook){
+     await newPool.query(
+      `
+       DELETE FROM books where id = $1
+      `,[idBook]
+    )
+}
