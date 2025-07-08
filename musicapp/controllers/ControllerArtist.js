@@ -33,25 +33,11 @@ export class ControllerArtist{
         }
     }
      static get = async(req,res)=>{
-        const {id} = req.params
+        const data = req.data
         try {
-               const data =await  pool.query(
-                    `
-                        SELECT * FROM artists WHERE id = $1;
-                    `,[id]
-                )    
-                if(data.rowCount === 0){
-                    res.status(200).json(successResponse({
-                        message:'These artist do not exist',
-                        valoration:false,
-                        data:[]
-                    }))
-
-                    return
-                }
                 res.status(200).json(successResponse({
                     message:"Artist got successfully",
-                    data:data.rows,
+                    data:data,
                     valoration:true
                 }))
         } catch (error) {
@@ -93,21 +79,7 @@ export class ControllerArtist{
                 const {id}=req.params
 
         try {
-           const data =await  pool.query(
-                    `
-                        SELECT * FROM artists WHERE id = $1;
-                    `,[id]
-                )    
-                if(data.rowCount === 0){
-                    res.status(200).json(successResponse({
-                        message:'These artist do not exist',
-                        valoration:false,
-                        data:[]
-                    }))
-
-                    return
-                }
-
+         
              await pool.query(
                 `
                 UPDATE artists SET name =$1,country = $2 WHERE id = $3;
@@ -130,20 +102,7 @@ export class ControllerArtist{
      static delete = async(req,res)=>{
         const {id} = req.params
         try {
-             const data =await  pool.query(
-                    `
-                        SELECT * FROM artists WHERE id = $1;
-                    `,[id]
-                )    
-                if(data.rowCount === 0){
-                    res.status(200).json(successResponse({
-                        message:'These artist do not exist',
-                        valoration:false,
-                        data:[]
-                    }))
-
-                    return
-                }
+            
                 await pool.query(
                     `
                     DELETE FROM artists WHERE id = $1

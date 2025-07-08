@@ -38,26 +38,12 @@ export class ControllerAlbums{
     }
 
     static getById = async(req,res)=>{
-        const {id} = req.params
+        const data_album = req.data_album
         try {
-
-            const data_album = await pool.query(
-                `
-                SELECT * FROM albums WHERE id = $1
-                `,[id]
-            )
-            if(data_album.rowCount === 0){
-                res.status(200).json(successResponse({
-                    message:'There do not are data',
-                    valoration:false,
-                    data:[]
-                }))
-                return
-            }
 
             res.status(200).json(successResponse({
                 message:'Data got successfull',
-                data:data_album.rows
+                data:data_album
             }))
 
         } catch (error) {
@@ -133,23 +119,6 @@ export class ControllerAlbums{
                 }))
                 return
             }
-
-              const data_album = await pool.query(
-
-                `
-                 SELECT * FROM albums WHERE id = $1
-                `,[id]
-            )
-            if(data_album.rowCount === 0)
-            {
-                res.status(200).json(successResponse({
-                    message:'The album does not exist',
-                    valoration:false,
-                    data:[]
-                }))
-                return
-            }
-
             await pool.query(
                 `
                  UPDATE albums SET title = $1 , release_year=$2, artist_id = $3
@@ -178,22 +147,7 @@ export class ControllerAlbums{
     static deleteAlbum=async(req,res)=>{
         const {id} = req.params
         try {
-             const data_album = await pool.query(
-
-                `
-                 SELECT * FROM albums WHERE id = $1
-                `,[id]
-            )
-            if(data_album.rowCount === 0)
-            {
-                res.status(200).json(successResponse({
-                    message:'The album does not exist',
-                    valoration:false,
-                    data:[]
-                }))
-                return
-            }
-
+        
             await pool.query(
                 `
                 DELETE FROM albums where id = $1

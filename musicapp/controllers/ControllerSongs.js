@@ -69,23 +69,6 @@ static updateSong = async(req,res)=>{
         return;
       }
 
-      const data_song = await pool.query(
-        `
-            select * from songs where id = $1;
-            `,
-        [id]
-      );
-
-       if (data_song.rowCount === 0) {
-        res.status(500).json(
-          errorResponse({
-            message: "The song does not exist",
-            log: "The song does not exist",
-          })
-        );
-        return;
-      }
-
       await pool.query(
         `
         UPDATE songs
@@ -135,16 +118,12 @@ static  getAll=async(req,res)=>{
 }
 
 static  getSong=async(req,res)=>{
-    const {id}=req.params
+  const data = req.data
     try {
-        const data =await  pool.query(
-        `
-            SELECT * FROM songs where id = $1;
-        `,[id]
-    )    
+      
     res.status(200).json(successResponse({
         message:"Song got successfully",
-        data:data.rows,
+        data,
         valoration:true
     }))
     } catch (error) {
@@ -162,22 +141,22 @@ static  getSong=async(req,res)=>{
 static deleteSong=async(req,res)=>{
    const {id}=req.params
   try {
-       const data_song = await pool.query(
-        `
-            select * from songs where id = $1;
-            `,
-        [id]
-      );
+      //  const data_song = await pool.query(
+      //   `
+      //       select * from songs where id = $1;
+      //       `,
+      //   [id]
+      // );
 
-       if (data_song.rowCount === 0) {
-        res.status(500).json(
-          errorResponse({
-            message: "The song does not exist",
-            log: "The song does not exist",
-          })
-        );
-        return;
-      }
+      //  if (data_song.rowCount === 0) {
+      //   res.status(500).json(
+      //     errorResponse({
+      //       message: "The song does not exist",
+      //       log: "The song does not exist",
+      //     })
+      //   );
+      //   return;
+      // }
 
       await pool.query(
         `

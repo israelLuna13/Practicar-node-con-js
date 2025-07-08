@@ -2,6 +2,8 @@ import express from 'express'
 import { ControllerSongs } from '../controllers/ControllerSongs.js'
 import { handleInputErrors } from '../middleware/validate.js'
 import { body,param } from 'express-validator'
+import { validateExistSongs } from '../middleware/querys.js'
+import { validateParams } from '../middleware/general.js'
 
 const route = express.Router()
 
@@ -18,21 +20,20 @@ route.put(
   body("title").notEmpty().withMessage("Title is required"),
   body("duration").isNumeric().withMessage("Duration is required"),
   body("album_id").isNumeric().withMessage("Id is required"),
-  param('id').isNumeric().withMessage("The param id most be numeric"),
+  validateParams,
+  validateExistSongs,
   handleInputErrors,
   ControllerSongs.updateSong
 );
 route.get('/',ControllerSongs.getAll)
 route.get('/:id',
-  param('id').isNumeric().withMessage("The param id most be numeric"),
+  validateParams,
+  validateExistSongs,
   handleInputErrors,
   ControllerSongs.getSong)
   
 route.delete('/:id',
-  param('id').isNumeric().withMessage("The param id most be numeric",
-    
-  ),handleInputErrors,
+validateParams,validateExistSongs,handleInputErrors,
   ControllerSongs.deleteSong
 )
-
 export default route
