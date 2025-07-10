@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { ControllerPlayListSongs } from '../controllers/ControllerPlaylistSongs.js'
 import { handleInputErrors } from '../middleware/validate.js'
 import { validateParams } from '../middleware/general.js'
+import { validateExistePlaylistSong } from '../middleware/querys.js'
 const route = express.Router()
 
 route.post('/',
@@ -15,6 +16,7 @@ route.put('/:id',
     body('playlist_id').isNumeric().withMessage('The is most be numeric'),
     body('song_id').isNumeric().withMessage('The is most be numeric'),
     validateParams,
+    validateExistePlaylistSong,
     handleInputErrors,
     ControllerPlayListSongs.update
 )
@@ -22,12 +24,12 @@ route.get('/',
     ControllerPlayListSongs.getAll
 )
 route.get('/:id',
-    validateParams,handleInputErrors,
+    validateParams,validateExistePlaylistSong,handleInputErrors,
     ControllerPlayListSongs.get
 )
 
 route.delete('/:id',
-    validateParams,handleInputErrors,
+    validateParams,validateExistePlaylistSong,handleInputErrors,
     ControllerPlayListSongs.delete
 )
 

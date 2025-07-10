@@ -6,6 +6,7 @@ import routeArtists from './routes/artistRoute.js'
 import routeUsers from './routes/usersRoute.js'
 import routePlayLists from './routes/playlistsRoute.js'
 import routePlayListsSongs from './routes/playlistSong.js'
+import routeLikes from './routes/likesRoute.js'
 
 const app = express()
 
@@ -30,6 +31,8 @@ app.use('/artists',routeArtists)
 app.use('/users',routeUsers)
 app.use('/playlists',routePlayLists)
 app.use('/playlists-songs',routePlayListsSongs)
+app.use('/likes',routeLikes)
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT,()=>{

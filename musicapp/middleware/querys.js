@@ -98,3 +98,37 @@ export const  validateExistSongs=async(req,res,next)=>{
         
     }
 }
+
+export const validateExistePlaylistSong = async (req, res,next) => {
+    const {id} = req.params
+    try {
+         const data_playlist_song = await pool.query(
+          `
+                SELECT * FROM playlist_songs WHERE id = $1;
+            `,[id]
+        );
+        if (data_playlist_song.rowCount === 0) {
+          res.status(200).json(
+            successResponse({
+              message: "There not are data",
+              valoration: false,
+              data: [],
+            })
+          );
+          return;
+        }
+       req.data_playlist_song = data_playlist_song.rows[0]
+       next()
+
+    } catch (error) {
+      console.log("------------");
+      console.log(error);
+      console.log("------------");
+      res.status(500).json(
+        errorResponse({
+          message: "There was a issue",
+          log: "There was a issue",
+        })
+      );
+    }
+  };

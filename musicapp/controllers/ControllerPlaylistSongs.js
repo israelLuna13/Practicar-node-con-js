@@ -95,27 +95,13 @@ export class ControllerPlayListSongs {
     }
   };
    static get = async (req, res) => {
-    const {id} = req.params
+    // const {id} = req.params
+    const data_playlist_song = req.data_playlist_song
     try {
-          const data_playlist_song = await pool.query(
-          `
-                SELECT * FROM playlist_songs WHERE id = $1;
-            `,[id]
-        );
-        if (data_playlist_song.rowCount === 0) {
-          res.status(200).json(
-            successResponse({
-              message: "There not are data",
-              valoration: false,
-              data: [],
-            })
-          );
-          return;
-        }
           res.status(200).json(
           successResponse({
             message: "Data got successfully",
-            data: data_playlist_song.rows,
+            data: data_playlist_song,
           })
         );
 
@@ -135,21 +121,7 @@ export class ControllerPlayListSongs {
     const {playlist_id,song_id}=req.body
     const {id}=req.params
     try {
-        const data_playlist_song = await pool.query(
-          `
-                SELECT * FROM playlist_songs WHERE id = $1;
-            `,[id]
-        );
-        if (data_playlist_song.rowCount === 0) {
-          res.status(200).json(
-            successResponse({
-              message: "There not are data",
-              valoration: false,
-              data: [],
-            })
-          );
-          return;
-        }
+       
         const data_song = await pool.query(
             `
                 SELECT * FROM songs WHERE id = $1
@@ -205,21 +177,7 @@ export class ControllerPlayListSongs {
    static delete = async (req, res) => {
     const {id} = req.params
     try {
-         const data_playlist_song = await pool.query(
-          `
-                SELECT * FROM playlist_songs WHERE id = $1;
-            `,[id]
-        );
-        if (data_playlist_song.rowCount === 0) {
-          res.status(200).json(
-            successResponse({
-              message: "There not are data",
-              valoration: false,
-              data: [],
-            })
-          );
-          return;
-        }
+        
         await pool.query(
             `
              DELETE FROM playlist_songs WHERE id = $1
