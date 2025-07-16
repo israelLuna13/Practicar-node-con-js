@@ -71,7 +71,7 @@ export class ControllerLikes {
               if (data_likes.rowCount === 0) {
                 res.status(200).json(
                   successResponse({
-                    message: "There not are data",
+                    message: "There are no data",
                     valoration: false,
                     data: [],
                   })
@@ -97,27 +97,12 @@ export class ControllerLikes {
     }
   };
     static get = async (req, res) => {
-      const {id} = req.params
+      const data_likes= req.data_likes
     try {
-       const data_likes = await pool.query(
-                `
-                      SELECT * FROM likes WHERE id = $1;
-                  `,[id]
-              );
-              if (data_likes.rowCount === 0) {
-                res.status(200).json(
-                  successResponse({
-                    message: "There not are data",
-                    valoration: false,
-                    data: [],
-                  })
-                );
-                return;
-              }
               res.status(200).json(
                 successResponse({
                   message: "Data got successfully",
-                  data: data_likes.rows,
+                  data: data_likes,
                 })
               );
     } catch (error) {
@@ -137,22 +122,6 @@ export class ControllerLikes {
     const {user_id,song_id}=req.body
     const {id} = req.params
     try {
-
-        const data_likes = await pool.query(
-                `
-                      SELECT * FROM likes WHERE id = $1;
-                  `,[id]
-              );
-              if (data_likes.rowCount === 0) {
-                res.status(200).json(
-                  successResponse({
-                    message: "There not are data for like id",
-                    valoration: false,
-                    data: [],
-                  })
-                );
-                return;
-              }
 
 
        const data_user = await pool.query(
@@ -215,21 +184,7 @@ export class ControllerLikes {
             const {id} = req.params
 
     try {
-        const data_likes = await pool.query(
-                `
-                      SELECT * FROM likes WHERE id = $1;
-                  `,[id]
-              );
-              if (data_likes.rowCount === 0) {
-                res.status(200).json(
-                  successResponse({
-                    message: "There not are data",
-                    valoration: false,
-                    data: [],
-                  })
-                );
-                return;
-              }
+       
               await pool.query(
                 `
                 DELETE FROM likes WHERE id = $1

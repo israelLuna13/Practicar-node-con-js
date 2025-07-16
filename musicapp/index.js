@@ -7,6 +7,8 @@ import routeUsers from './routes/usersRoute.js'
 import routePlayLists from './routes/playlistsRoute.js'
 import routePlayListsSongs from './routes/playlistSong.js'
 import routeLikes from './routes/likesRoute.js'
+import routePlayHistory from './routes/playHistoryRoute.js'
+import routePurchases from './routes/purchasesRoute.js'
 
 const app = express()
 
@@ -32,6 +34,8 @@ app.use('/users',routeUsers)
 app.use('/playlists',routePlayLists)
 app.use('/playlists-songs',routePlayListsSongs)
 app.use('/likes',routeLikes)
+app.use('/play-history',routePlayHistory)
+app.use('/purchases',routePurchases)
 
 const PORT = process.env.PORT || 3000
 
