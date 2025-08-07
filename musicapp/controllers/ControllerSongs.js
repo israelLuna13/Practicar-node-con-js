@@ -96,7 +96,7 @@ static  getAll=async(req,res)=>{
     try {
         const data =await  pool.query(
         `
-            SELECT * FROM songs;
+           select songs.id, songs.title, songs.duration , albums.title as album  from songs join albums on  songs.album_id = albums.id
         `
     )    
     res.status(200).json(successResponse({

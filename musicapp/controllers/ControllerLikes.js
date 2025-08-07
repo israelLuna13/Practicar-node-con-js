@@ -64,10 +64,10 @@ export class ControllerLikes {
     static getAll = async (req, res) => {
     try {
        const data_likes = await pool.query(
-                `
-                      SELECT * FROM likes;
+         `
+                        SELECT likes.id, users.name as user_name, songs.title as song_name FROM likes join users on likes.user_id = users.id join songs on likes.song_id = songs.id ;
                   `
-              );
+       );
               if (data_likes.rowCount === 0) {
                 res.status(200).json(
                   successResponse({

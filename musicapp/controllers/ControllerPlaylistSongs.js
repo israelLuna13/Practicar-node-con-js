@@ -62,8 +62,9 @@ export class ControllerPlayListSongs {
     try {
         const data_playlist_song = await pool.query(
           `
-                SELECT * FROM playlist_songs;
+                SELECT playlist_songs.id, playlists.name, songs.title FROM playlist_songs join playlists on playlist_songs.playlist_id = playlists.id join songs on playlist_songs.song_id = songs.id ;
             `
+            //  select songs.id, songs.title, songs.duration , albums.title as album  from songs join albums on  songs.album_id = albums.id
         );
         if (data_playlist_song.rowCount === 0) {
           res.status(200).json(

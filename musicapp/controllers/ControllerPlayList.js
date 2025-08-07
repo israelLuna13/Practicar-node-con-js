@@ -50,7 +50,7 @@ export class ControllerPlayLists {
     try {
       const data_playlists = await pool.query(
         `
-              SELECT * FROM playlists;
+              SELECT playlists.id, playlists.name , users.name as user_name FROM playlists join users on playlists.user_id = users.id;
               `
       );
 

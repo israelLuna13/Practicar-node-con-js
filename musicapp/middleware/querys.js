@@ -6,7 +6,7 @@ export const validateExistAlbum = async (req, res, next) => {
   try {
     const data_album = await pool.query(
       `
-        SELECT * FROM albums WHERE id = $1
+        select albums.id, albums.title, albums.release_year , artists.name  from albums join artists on  albums.artist_id = artists.id WHERE albums.id = $1
       `,
       [id]
     );

@@ -5,9 +5,11 @@ export class ControllerAlbums{
         try {
             const data_album = await pool.query(
                 `
-                SELECT * FROM albums;
+                select albums.id, albums.title, albums.release_year , artists.name  from albums join artists on  albums.artist_id = artists.id
+
                 `
             )
+            
             if(data_album.rowCount === 0){
                 res.status(500).json(successResponse({
                     message:'There do not data',

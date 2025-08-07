@@ -158,7 +158,7 @@ export class ControllerPlayHistory {
     try {
           const data_history = await pool.query(
                 `
-                      SELECT * FROM play_history;
+                      SELECT play_history.id,play_history.played_at, users.name as user_name, songs.title as song_name FROM play_history join users on play_history.user_id = users.id join songs on play_history.song_id = songs.id ;
                   `
               );
               if (data_history.rowCount === 0) {
