@@ -232,3 +232,37 @@ export const validateExistePlayHistory = async (req, res,next) => {
       );
     }
   };
+export const validateExistUser = async(req,res,next)=>{
+  const {email}= req.body
+  try {
+    const data_user = await pool.query(
+      `
+      SELECT * FROM users WHERE email = $1
+      `,[email]
+    )
+    if(data_user.rowCount === 0){
+      res.status(200).json(
+                  successResponse({
+                    message: "The email do not exist",
+                    valoration: false,
+                    data: [],
+                  })
+                );
+                return
+    }
+          req.data_user= data_user.rows[0]
+
+    next()
+    
+  } catch (error) {
+       console.log("------------");
+      console.log(error);
+      console.log("------------");
+      res.status(500).json(
+        errorResponse({
+          message: "There was a issue",
+          log: "There was a issue",
+        })
+      );
+  }
+}

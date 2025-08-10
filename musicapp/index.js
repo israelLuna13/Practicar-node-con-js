@@ -10,6 +10,7 @@ import routePlayListsSongs from './routes/playlistSong.js'
 import routeLikes from './routes/likesRoute.js'
 import routePlayHistory from './routes/playHistoryRoute.js'
 import routePurchases from './routes/purchasesRoute.js'
+import routeAuth from './routes/authRouter.js'
 import { corsConfig } from './config/cors.js';
 
 const app = express()
@@ -41,6 +42,8 @@ app.use('/playlists-songs',routePlayListsSongs)
 app.use('/likes',routeLikes)
 app.use('/play-history',routePlayHistory)
 app.use('/purchases',routePurchases)
+app.use('/auth',routeAuth)
+
 
 const PORT = process.env.PORT || 3000
 

@@ -4,10 +4,11 @@ import { validateParams } from "../middleware/general.js";
 import { handleInputErrors } from "../middleware/validate.js";
 import { body } from "express-validator";
 import { validateExistArtist } from "../middleware/querys.js";
+import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", ControllerArtist.getAll);
+router.get("/", authenticate,ControllerArtist.getAll);
 router.get(
   "/:id",
   validateParams,

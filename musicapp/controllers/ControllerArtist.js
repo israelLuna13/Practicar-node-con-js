@@ -3,6 +3,7 @@ import { successResponse ,errorResponse} from "../utils/response.js";
 
 export class ControllerArtist{
     static getAll = async(req,res)=>{
+  
         try {
                const data =await  pool.query(
                     `
@@ -34,6 +35,8 @@ export class ControllerArtist{
     }
      static get = async(req,res)=>{
         const data = req.data
+       
+        
         try {
                 res.status(200).json(successResponse({
                     message:"Artist got successfully",
