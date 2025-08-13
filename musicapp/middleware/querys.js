@@ -109,7 +109,7 @@ export const validateExistePlaylistSong = async (req, res,next) => {
         if (data_playlist_song.rowCount === 0) {
           res.status(200).json(
             successResponse({
-              message: "There not are data",
+              message: "There are no data",
               valoration: false,
               data: [],
             })
@@ -137,13 +137,13 @@ export const validateExistLikes = async (req, res,next) => {
     try {
        const data_likes = await pool.query(
                 `
-                      SELECT * FROM likes WHERE id = $1;
+                       SELECT likes.id, users.name as user_name, songs.title as song_name FROM likes join users on likes.user_id = users.id join songs on likes.song_id = songs.id WHERE likes.id = $1 ;
                   `,[id]
               );
               if (data_likes.rowCount === 0) {
                 res.status(200).json(
                   successResponse({
-                    message: "There not are data",
+                    message: "There are no data",
                     valoration: false,
                     data: [],
                   })
@@ -178,7 +178,7 @@ export const validateExistePlayHistory = async (req, res,next) => {
               if (data_history.rowCount === 0) {
                 res.status(200).json(
                   successResponse({
-                    message: "There not are data",
+                    message: "There are no data",
                     valoration: false,
                     data: [],
                   })
@@ -211,7 +211,7 @@ export const validateExistePlayHistory = async (req, res,next) => {
               if (data_purchases.rowCount === 0) {
                 res.status(200).json(
                   successResponse({
-                    message: "There not are data",
+                    message: "There are no data",
                     valoration: false,
                     data: [],
                   })

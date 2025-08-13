@@ -3,13 +3,16 @@ import { errorResponse, successResponse } from "../utils/response.js";
 
 export class ControllerPlayLists {
   static create = async (req, res) => {
-    const { name, user_id } = req.body;
+    const { name } = req.body;
+    const {session_user} = req
+    console.log(session_user);
+    
     try {
       const data_users = await pool.query(
         `
                 SELECT * FROM users WHERE id = $1;
                 `,
-        [user_id]
+        [session_user.id]
       );
       if (data_users.rowCount === 0) {
         res.status(200).json(
@@ -25,7 +28,7 @@ export class ControllerPlayLists {
         `
                 INSERT INTO playlists(name,user_id) VALUES ($1,$2);
                 `,
-        [name, user_id]
+        [name, session_user.id]
       );
       res.status(201).json(
         successResponse({
@@ -125,8 +128,9 @@ export class ControllerPlayLists {
   };
 
   static update = async (req, res) => {
-    const { name, user_id } = req.body;
+    const { name } = req.body;
     const { id } = req.params;
+      const {session_user} = req
     try {
       const data_playlists = await pool.query(
         `
@@ -150,7 +154,7 @@ export class ControllerPlayLists {
         `
                 SELECT * FROM users WHERE id = $1;
                 `,
-        [user_id]
+        [session_user.id]
       );
       if (data_users.rowCount === 0) {
         res.status(200).json(
@@ -165,9 +169,9 @@ export class ControllerPlayLists {
 
       await pool.query(
         `
-              UPDATE playlists SET name=$1,user_id=$2 WHERE id = $3;
+              UPDATE playlists SET name=$1 WHERE id = $2;
               `,
-        [name, user_id, id]
+        [name, id]
       );
 
       res.status(200).json(

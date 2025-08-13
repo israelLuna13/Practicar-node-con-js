@@ -3,12 +3,13 @@ import { successResponse ,errorResponse} from "../utils/response.js";
 
 export class ControllerLikes {
   static create = async (req, res) => {
-    const {user_id,song_id}=req.body
+    const {song_id}=req.body
+    const {session_user} = req
     try {
        const data_user = await pool.query(
                 `
                       SELECT * FROM users WHERE id = $1;
-                  `,[user_id]
+                  `,[session_user.id]
               );
               if (data_user.rowCount === 0) {
                 res.status(200).json(
@@ -39,7 +40,7 @@ export class ControllerLikes {
               await pool.query(
                 `
                   INSERT INTO likes(user_id,song_id) VALUES ($1,$2);
-                `,[user_id,song_id]
+                `,[session_user.id,song_id]
               )
 
                 res.status(201).json(
@@ -119,15 +120,16 @@ export class ControllerLikes {
   };
   
    static update = async (req, res) => {
-    const {user_id,song_id}=req.body
+    const {song_id}=req.body
     const {id} = req.params
+     const {session_user} = req
     try {
 
 
        const data_user = await pool.query(
                 `
                       SELECT * FROM users WHERE id = $1;
-                  `,[user_id]
+                  `,[session_user.id]
               );
               if (data_user.rowCount === 0) {
                 res.status(200).json(
@@ -157,8 +159,8 @@ export class ControllerLikes {
 
               await pool.query(
                 `
-                  UPDATE likes SET user_id = $1,song_id=$2 WHERE id = $3;
-                `,[user_id,song_id,id]
+                  UPDATE likes SET song_id=$1 WHERE id = $2;
+                `,[song_id,id]
               )
 
                 res.status(200).json(
