@@ -4,13 +4,14 @@ import { pool } from "../config/db.js";
 export class ControllerPurchases {
     
   static create = async (req, res) => {
-    const {user_id,album_id} = req.body
+    const {album_id} = req.body
+     const {session_user}= req   
     try {
         const data_user = await pool.query(
         `
          SELECT * FROM users WHERE id = $1;
                               `,
-        [user_id]
+        [session_user.id]
       );
       if (data_user.rowCount === 0) {
         res.status(200).json(
@@ -44,7 +45,7 @@ export class ControllerPurchases {
 
             `
             INSERT INTO purchases (user_id,album_id) VALUES($1,$2);
-            `,[user_id,album_id]
+            `,[session_user.id,album_id]
         )
 
          res.status(201).json(
@@ -69,15 +70,17 @@ export class ControllerPurchases {
   };
 
    static update = async (req, res) => {
-        const {user_id,album_id} = req.body
+        const {album_id} = req.body
         const {id} = req.params
+        const {session_user}= req   
+
 
     try {
            const data_user = await pool.query(
         `
          SELECT * FROM users WHERE id = $1;
                               `,
-        [user_id]
+        [session_user.id]
       );
       if (data_user.rowCount === 0) {
         res.status(200).json(
@@ -111,7 +114,7 @@ export class ControllerPurchases {
 
             `
             UPDATE purchases SET user_id =$1, album_id=$2 WHERE id =$3;
-            `,[user_id,album_id,id]
+            `,[session_user.id,album_id,id]
         )
 
          res.status(201).json(
@@ -138,7 +141,7 @@ export class ControllerPurchases {
     try {
          const data_purchases = await pool.query(
                 `
-                      SELECT * FROM purchases;
+                       SELECT purchases.id,purchases.purchase_date, users.name as user_name, albums.title as album_name FROM purchases join users on purchases.user_id = users.id join albums on purchases.album_id = albums.id;
                   `
               );
               if (data_purchases.rowCount === 0) {

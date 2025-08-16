@@ -3,13 +3,14 @@ import { errorResponse, successResponse } from "../utils/response.js";
 
 export class ControllerPlayHistory {
   static create = async (req, res) => {
-    const { user_id, song_id } = req.body;
-    try {
+    const { song_id } = req.body;
+    const {session_user}= req   
+     try {
       const data_user = await pool.query(
         `
          SELECT * FROM users WHERE id = $1;
                               `,
-        [user_id]
+        [session_user.id]
       );
       if (data_user.rowCount === 0) {
         res.status(200).json(
@@ -43,7 +44,7 @@ export class ControllerPlayHistory {
 
             `
                 INSERT INTO play_history (user_id,song_id) VALUES($1,$2);
-            `,[user_id,song_id]
+            `,[session_user.id,song_id]
         )
 
          res.status(201).json(
@@ -67,14 +68,15 @@ export class ControllerPlayHistory {
   };
 
   static update = async (req, res) => {
-    const { user_id, song_id } = req.body;
+    const { song_id } = req.body;
     const {id} = req.params
+     const {session_user}= req   
     try {
       const data_user = await pool.query(
         `
          SELECT * FROM users WHERE id = $1;
                               `,
-        [user_id]
+        [session_user.id]
       );
       if (data_user.rowCount === 0) {
         res.status(200).json(
@@ -108,7 +110,7 @@ export class ControllerPlayHistory {
 
             `
             UPDATE play_history SET user_id=$1,song_id = $2 WHERE id = $3
-            `,[user_id,song_id,id]
+            `,[session_user.id,song_id,id]
         )
 
          res.status(201).json(

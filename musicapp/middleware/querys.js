@@ -172,7 +172,7 @@ export const validateExistePlayHistory = async (req, res,next) => {
     try {
           const data_history = await pool.query(
                 `
-                      SELECT * FROM play_history WHERE id = $1;
+                       SELECT play_history.id,play_history.played_at, users.name as user_name, songs.title as song_name FROM play_history join users on play_history.user_id = users.id join songs on play_history.song_id = songs.id WHERE play_history.id = $1;
                   `,[id]
               );
               if (data_history.rowCount === 0) {
@@ -205,7 +205,7 @@ export const validateExistePlayHistory = async (req, res,next) => {
     try {
           const data_purchases = await pool.query(
                 `
-                      SELECT * FROM purchases WHERE id = $1;
+                      SELECT purchases.id,purchases.purchase_date, users.name as user_name, albums.title as album_name FROM purchases join users on purchases.user_id = users.id join albums on purchases.album_id = albums.id WHERE purchases.id = $1;
                   `,[id]
               );
               if (data_purchases.rowCount === 0) {

@@ -4,12 +4,13 @@ import { handleInputErrors } from '../middleware/validate.js'
 import { ControllerPlayHistory } from '../controllers/ControllerPlayHistory.js';
 import { validateParams } from '../middleware/general.js';
 import { validateExistePlayHistory } from '../middleware/querys.js';
+import { authenticate } from '../middleware/auth.js';
 
 const route = express.Router()
 
 route.post(
   "/",
-  body("user_id").isNumeric().withMessage("The id user most be numeric"),
+  authenticate,
   body("song_id").isNumeric().withMessage("The id song most be numeric"),
   handleInputErrors,
   ControllerPlayHistory.create
@@ -17,9 +18,9 @@ route.post(
 
 route.put(
   "/:id",
+  authenticate,
   validateParams,
   validateExistePlayHistory,
-  body("user_id").isNumeric().withMessage("The id user most be numeric"),
   body("song_id").isNumeric().withMessage("The id song most be numeric"),
   handleInputErrors,
   ControllerPlayHistory.update
@@ -27,6 +28,7 @@ route.put(
 
 route.get(
   "/:id",
+  authenticate,
   validateParams,
   validateExistePlayHistory,
   handleInputErrors,
@@ -35,12 +37,14 @@ route.get(
 
 route.get(
   "/",
+  authenticate,
   ControllerPlayHistory.getAll
 );
 
 
 route.delete(
   "/:id",
+  authenticate,
   validateParams,
   validateExistePlayHistory,
   handleInputErrors,
